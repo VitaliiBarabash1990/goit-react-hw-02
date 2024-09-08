@@ -24,7 +24,7 @@ function App() {
 
 	// Або
 	const [values, setValues] = useState(
-		() => JSON.parse(window.localStorage.getItem("saved-cliks")) ?? options
+		() => JSON.parse(window.localStorage.getItem("saved-clicks")) ?? options
 	);
 
 	useEffect(() => {
