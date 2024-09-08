@@ -5,21 +5,27 @@ import Feedback from "./components/Feedback/Feedback";
 import Options from "./components/Options/Options";
 import Notification from "./components/Notification/Notification";
 
+const options = {
+	good: 0,
+	neutral: 0,
+	bad: 0,
+};
+
 function App() {
 	// const [values, setValues] = useState(options);
-	const options = {
-		good: 0,
-		neutral: 0,
-		bad: 0,
-	};
 
-	const [values, setValues] = useState(() => {
-		const savedClicks = JSON.parse(window.localStorage.getItem("saved-clicks"));
-		if (savedClicks !== null) {
-			return savedClicks;
-		}
-		return options;
-	});
+	// const [values, setValues] = useState(() => {
+	// 	const savedClicks = JSON.parse(window.localStorage.getItem("saved-clicks"));
+	// 	if (savedClicks !== null) {
+	// 		return savedClicks;
+	// 	}
+	// 	return options;
+	// });
+
+	// Або
+	const [values, setValues] = useState(
+		() => JSON.parse(window.localStorage.getItem("saved-cliks")) ?? options
+	);
 
 	useEffect(() => {
 		window.localStorage.setItem("saved-clicks", JSON.stringify(values));
