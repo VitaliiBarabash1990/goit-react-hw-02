@@ -1,17 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Description from "./components/Description/Description";
 import s from "./App.module.css";
 import Feedback from "./components/Feedback/Feedback";
 import Options from "./components/Options/Options";
-
-const options = {
-	good: 0,
-	neutral: 0,
-	bad: 0,
-};
+import Notification from "./components/Notification/Notification";
 
 function App() {
-	const [values, setValues] = useState(options);
+	// const [values, setValues] = useState(options);
+	const options = {
+		good: 0,
+		neutral: 0,
+		bad: 0,
+	};
+
+	const [values, setValues] = useState(() => {
+		const savedClicks = JSON.parse(window.localStorage.getItem("saved-clicks"));
+		if (savedClicks !== null) {
+			return savedClicks;
+		}
+		return options;
+	});
+
+	useEffect(() => {
+		window.localStorage.setItem("saved-clicks", JSON.stringify(values));
+	}, [values]);
 
 	const updateFeedback = (feedbackType) => {
 		if (feedbackType === "reset") {
@@ -29,15 +41,22 @@ function App() {
 		}
 	};
 
+	const totalFeedback = values.good + values.neutral + values.bad;
+
 	return (
 		<div className={s.app}>
 			<Description />
-			<Options updateFeedback={updateFeedback} />
-			<Feedback
-				valueGood={values.good}
-				valueNeutral={values.neutral}
-				valueBad={values.bad}
-			/>
+			<Options updateFeedback={updateFeedback} totalFeedback={totalFeedback} />
+			{totalFeedback !== 0 ? (
+				<Feedback
+					valueGood={values.good}
+					valueNeutral={values.neutral}
+					valueBad={values.bad}
+					totalFeedback={totalFeedback}
+				/>
+			) : (
+				<Notification />
+			)}
 		</div>
 	);
 }
